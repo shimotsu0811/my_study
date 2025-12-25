@@ -1,0 +1,43 @@
+# --- LaTeX ---
+*.aux
+*.bbl
+*.blg
+*.idx
+*.ind
+*.lof
+*.lot
+*.out
+*.toc
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.fls
+*.log
+*.fdb_latexmk
+*.synctex.gz
+*.dvi
+*.nav
+*.snm
+*.vrb
+
+# PDFは成果物として残したいなら行頭に # をつけてコメントアウト、
+# Gitを軽くしたいならこのまま無視する
+*.pdf
+
+# --- Python ---
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+venv/
+env/
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
