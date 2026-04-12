@@ -1,0 +1,734 @@
+\documentclass[12pt,titlepage,dvipdfmx,twoside,fleqn,a4paper]{jsarticle}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[driver=dvipdfm,top=20truemm,bottom=20truemm,left=20truemm,right=20truemm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{ascmac}
+\usepackage{mathtools}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{thmbox}
+\usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{cd,calc}
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{raster,skins,breakable,theorems,xparse}
+\usepackage[version=3]{mhchem}
+\usepackage[dvipdfmx]{pict2e}
+\usepackage{otf}
+\usepackage[inline]{enumitem}
+\usepackage{mleftright}
+\usepackage{esint}
+\usepackage{bigints}
+\usepackage{varwidth}
+\usepackage{ulem}
+\usepackage{wrapfig}
+\usepackage{pxrubrica}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{here}
+\usepackage{fancyvrb}
+\usepackage{xstring}
+
+%CTANにない.sty
+\usepackage{ascolorbox}
+
+
+
+\makeatletter
+
+
+\newtcbox{\card}{on line, colback=white, colframe=black, boxrule=0.6pt, arc=0pt, boxsep=0pt, left=2pt, right=2pt, top=3pt, bottom=3pt}
+
+%その他の設定
+\everymath{\displaystyle}
+
+\newcommand{\kaitou}{【解答】}
+
+\newcommand{\kan}{,\;}
+
+% 数式モードでのみ , の後ろに少しスペースを入れる
+\mathchardef\mathcommaorig=\mathcode`\,
+\begingroup
+  \catcode`\,=\active
+  \gdef,{%
+    \mathcommaorig
+    \mskip4mu
+  }%
+\endgroup
+\mathcode`\,="8000
+
+\newcommand{\visible}{visible}
+
+\newcommand{\youten}{\ascboxD*{要点}}
+
+\newcommand{\kyoutyou}[1]{\uline{\textbf{#1}}}
+
+\title{\empty}
+\author{\empty}
+\date{\empty}
+
+% 日付の取得
+% 1文字目から4文字目を \myyear に格納
+\StrMid{\jobname}{1}{4}[\myyear]
+
+% 6文字目から7文字目を \mymonth に格納
+\StrMid{\jobname}{6}{7}[\mymonth]
+
+% 9文字目から10文字目を \myday に格納
+\StrMid{\jobname}{9}{10}[\myday]
+
+
+
+
+%インデント等の長さ調整
+\setlength{\parindent}{1em}
+\setlength{\columnsep}{5mm}
+\setlength{\mathindent}{23pt}
+
+\setlist{nosep,topsep=0.3mm,itemsep=0.5mm,leftmargin=*,labelsep=0.3mm}
+
+\thickmuskip=1.0\thickmuskip
+\medmuskip=0.5\medmuskip
+\thinmuskip=0.5\thinmuskip
+\arraycolsep=0.5\arraycolsep
+\AtBeginDocument{
+  \abovedisplayskip     =0.5\abovedisplayskip
+  \abovedisplayshortskip=0.5\abovedisplayshortskip
+  \belowdisplayskip     =0.5\belowdisplayskip
+  \belowdisplayshortskip=0.5\belowdisplayshortskip
+}
+
+
+%箇条書きの調整
+\renewcommand{\theenumi}{\arabic{enumi}}
+\renewcommand{\labelenumi}{(\theenumi)}
+\renewcommand{\theenumii}{\roman{enumii}}
+\renewcommand{\labelenumii}{(\theenumii)}
+\renewcommand{\theenumiii}{\roman{enumii}-\alph{enumiii}}
+\renewcommand{\labelenumiii}{(\theenumiii)}
+
+\renewcommand{\labelitemi}{$\cdot$\;}
+
+
+
+%分数の調整
+\DeclareRobustCommand*\frac[2]{
+   \mathchoice
+      {\@frac\textstyle{3.5}{#1}{#2}}
+      {{\displaystyle\@frac\textstyle{3.5}{#1}{#2}}}
+      {\@frac\scriptstyle{1.5}{#1}{#2}}
+      {\@frac\scriptscriptstyle{1.5}{#1}{#2}}}
+\def\@frac#1#2#3#4{
+    {\begingroup\mkern#2mu\lower.44ex\hbox{$#1#3$}\mkern#2mu\endgroup
+    \@@over \mkern#2mu\lower-.1ex\hbox{$#1#4$}\mkern#2mu}}
+\DeclareRobustCommand\dfrac[2]{\displaystyle\@frac\textstyle{3.5}{#1}{#2}}
+\DeclareRobustCommand\tfrac[2]{\textstyle\@frac\textstyle{3.5}{#1}{#2}}
+
+
+
+\makeatother
+
+
+
+%セクション番号をローマ数字に
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\thesection-\arabic{subsection}}
+
+%セクションの体裁
+\titleformat{\section}{\normalsize\bfseries}{\thesection\quad}{0pt}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection\quad}{0pt}{}
+\titlespacing*{\section}{0pt}{1.5em}{0.5em}
+\titlespacing*{\subsection}{0pt}{1em}{0.5em}
+
+%ページスタイルの設定
+\pagestyle{plain}
+
+
+
+\begin{document}
+
+\begin{center}
+\vspace*{2em}
+{\large Inverse Scattering filed theory}
+
+\vspace{2em}
+
+Kenjiro Kimura\\
+Center for Mathematical and Data Sciences, Kobe University\\
+Noriaki Kimura\\
+Integral Geometry Science Inc.
+\vspace{2em}
+\end{center}
+
+\section{Introduction}
+
+The most important issue in the theoretical analysis for inverse wave scattering problem is that
+it should be based on the realistic observation processes and methods. In the theory described
+in this paper, both the wave transmitting point and the wave receiving point are arbitrarily set
+on the curved surface to receive the wave scattering data, and the inside of the object is
+visualized using the acquired data. Transmitting antennas and receiving ones are installed on a
+curve in a two-dimensional cross section that moves in the x-axis direction. Assuming that the
+number of transmitting antennas and the number of receiving antennas are both $N$, the time
+waveforms of $N$ squared are recorded, and the image of measurement target should be
+reconstructed using the data. In the overview of this theory, the scattering field function required
+for visualization should satisfy the partial differential equation defined in 6-dimensional space
+$(t,\, x,\, y_1,\, y_2,\, z_1,\, z_2)$ or 7-dimensional space \quad $(t,\, x_1,\, x_2,\, y_1,\, y_2,\, z_1,\, z_2)$ which corresponds to the
+coordinates of transmitting points and receiving points extendedly-defined not only on the
+surface but also the inside. The three-dimensional target image can be obtained by solving this
+equation using transmitted data and received data on the curved surface as the boundary
+condition and setting $t \to 0$,\; $x_1 \to x_2\,(=x)$,\; $z_2 \to z_1\,(=z)$,\; $y_1 \to y_2\,(=y)$.\;
+This theoretical method is most suitable for computer analysis, and it is considered that it can be effectively
+used for the research about non-destructive subsurface imaging.
+
+\section{Inverse Scattering filed theory}
+\subsection{Inverse scattering problem}
+
+Under the condition that the wave frequency $\omega$ is constant, the wave transmitting point $\mathbf{r}_1$ and
+the wave receiving point $\mathbf{r}_2$ freely move inside the cross-section $\mathrm{D}$ perpendicular to the $x$
+direction with a certain constraint condition, when the data obtained at the above situation is
+expressed for $G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$, this function should be related to the distribution of scattering points
+in the region. FIG.1 shows a situation in which the wave transmitted from $\mathbf{r}_1$ is reflected at the
+point $\boldsymbol{\xi}$ and returns to the receiving point $\mathbf{r}_2$. Since there are many scattering points in the region,
+$G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$ can be expressed as follows.
+
+%%% ページ2 %%%
+
+\begin{equation}
+G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)
+= \iiint_D \varphi\!\left(\mathbf{r}_1 \to \boldsymbol{\xi} \to \mathbf{r}_2,\, \omega\right) d\boldsymbol{\xi}
+\tag{1-1}
+\end{equation}
+
+Here, $\varphi(\mathbf{r}_1 \to \boldsymbol{\xi} \to \mathbf{r}_2,\, \omega)$ indicates the signal of the
+wave at the receiving point $\mathbf{r}_2$ when the wave is
+transmitted from the $\mathbf{r}_1$ and scattered at point $\boldsymbol{\xi}$. The
+constraint conditions imposed on the wave transmitting
+point $\mathbf{r}_1$ and the wave receiving point $\mathbf{r}_2$ are as follows.
+The constraint is that the $x$-coordinates of $\mathbf{r}_1$ and $\mathbf{r}_2$ are
+always equal. This function $G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$ is used to
+explain the theoretical structure of the inverse
+scattering problem. Let $\mathrm{D}$ be a sub-region in the three-dimensional space, and let $\partial\mathrm{D}$ be its boundary. At
+this situation, the function $G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$ is the solution
+of the following differential equation inside the
+domain $\mathrm{D}$.
+
+\begin{figure}[H]
+\centering
+% ここにFigure 1の画像を挿入
+% \includegraphics[width=0.5\textwidth]{fig1.png}
+\vspace{6cm}
+\caption{$\mathbf{r}_1$ and $\mathbf{r}_2$ move freely inside region $\mathrm{D}$, respectively. $G$ is the sum of the scattering signals from all points $\boldsymbol{\xi}$.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+% ここにFigure 2の画像を挿入
+% \includegraphics[width=0.7\textwidth]{fig2.png}
+\vspace{8cm}
+\caption{Sensor array}
+\end{figure}
+
+%%% ページ3 %%%
+
+\begin{equation}
+L\!\left(\frac{\partial}{\partial t},\, \frac{\partial}{\partial\mathbf{r}_1},\, \frac{\partial}{\partial\mathbf{r}_2}\right) G(\mathbf{r}_1,\, \mathbf{r}_2,\, t) = 0
+\tag{1-2}
+\end{equation}
+
+$\overline{G}(\mathbf{r}_1,\, \mathbf{r}_2,\, t)$ is a Fourier transform function of $G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$ with respect to $\omega$. Further, the value
+of $G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)$ at the boundary $\partial\mathrm{D}$ is a signal received by the antennas. The above equation
+is solved under this boundary condition, and $\rho(\mathbf{r})$ is defined as follows from the result.
+
+\begin{equation}
+\rho(\mathbf{r}) = \lim_{t \to 0}\left[\mathrm{Tr}\!\left[\,\overline{G}(\mathbf{r}_1,\, \mathbf{r}_2,\, t)\,\right]\right]
+= \overline{G}(\mathbf{r},\, \mathbf{r},\, 0)
+\tag{1-3}
+\end{equation}
+
+This $\rho(\mathbf{r})$ is a function corresponding to the spatial distribution of the gradient of the
+permittivity inside the region D using microwaves. In this scheme, deriving the differential
+operator $L(\partial/\partial t,\, \partial/\partial\mathbf{r}_1,\, \partial/\partial\mathbf{r}_2)$ that appears here is the most esoteric problem.
+
+\subsection{Derivation of $L\!\left(\partial/\partial t,\, \partial/\partial\mathbf{r}_1,\, \partial/\partial\mathbf{r}_2\right)$}
+
+The method for deriving this differential operator is
+be described as follows. A case where the sensor array
+shown in FIG.\ 2 moves in the x-axis direction along a
+curved surface while performing a rotational scan in the direction
+perpendicular to the x-axis is considered. On an
+arbitrary curve, the $y$ and $z$ coordinates of $\mathbf{r}_1$ and $\mathbf{r}_2$ are
+not always equal.
+Specifically, $\mathbf{r}_1 = (x,\, y_1,\, z_1)$, $\mathbf{r}_2 = (x,\, y_2,\, z_2)$. The function $G$ is defined as follows.
+
+\begin{figure}[H]
+\centering
+% ここにFigure 3の画像を挿入
+% \includegraphics[width=0.6\textwidth]{fig3.png}
+\vspace{7cm}
+\caption{Waves transmitted from $\mathrm{P}_1$ are reflected at point $\mathrm{P}$ and return to $\mathrm{P}_2$. $z_1$ and $z_2$ are optional. The measurement point moves on the cross-section curve $\mathrm{S}$.}
+\end{figure}
+
+\begin{equation}
+G(\mathbf{r}_1,\, \mathbf{r}_2,\, \omega)
+= \iiint_D \varphi\!\left(\mathbf{r}_1 \to \boldsymbol{\xi} \to \mathbf{r}_2,\, \omega\right) d\boldsymbol{\xi}
+\tag{2-1}
+\end{equation}
+
+The equation that the function $G$ satisfies is derived. Here, $\omega = ck$. $c$ is the propagation velocity
+and $k$ is the wave number, and the wavelength is $\lambda$, there is a relationship of $k = 2\pi/\lambda$. The
+
+%%% ページ4 %%%
+
+following function $\phi$ is introduced.
+
+\begin{align}
+\phi(x,\, y_1,\, y_2,\, z_1,\, z_2,\, \omega)
+&= \iint_D \frac{e^{ik\rho_1}}{\rho_1}\,\frac{e^{ik\rho_2}}{\rho_2}\,\varepsilon(\xi,\, \eta,\, \zeta)\,d\xi\,d\eta\,d\zeta \notag\\
+\rho_1 &= \sqrt{(x-\xi)^2 + (y_1-\eta)^2 + (z_1-\zeta)^2} \notag\\
+\rho_2 &= \sqrt{(x-\xi)^2 + (y_2-\eta)^2 + (z_2-\zeta)^2}
+\tag{2-2}
+\end{align}
+
+Here, the wave number is written as $k$, assuming that the time factor is proportional to
+$\exp(-i\omega t)$. The function in the integrand in the above equation is $\varphi$ in equation (2-1).
+
+\begin{equation}
+\varphi = \frac{e^{ik\rho_1}}{\rho_1}\,\frac{e^{ik\rho_2}}{\rho_2}\,\varepsilon(\xi,\, \eta,\, \zeta)
+\tag{2-3}
+\end{equation}
+
+A partial differential equation whose an asymptotic solution is equation (2-2) is derived. Here,
+the higher-order terms of $1/\rho$ resulting from differentiations should be ignored. The
+abbreviations for differentiations are defined as follows.
+
+\begin{equation}
+\frac{\partial}{\partial t} \to \partial_t,\quad
+\frac{\partial}{\partial x} \to \partial_x,\quad
+\frac{\partial}{\partial y_1} \to \partial_{y1},\quad
+\frac{\partial}{\partial y_2} \to \partial_{y2},\quad
+\frac{\partial}{\partial z_1} \to \partial_{z1},\quad
+\frac{\partial}{\partial z_2} \to \partial_{z2}
+\tag{2-4}
+\end{equation}
+
+As a result of some calculations, it is derived that $\phi$ satisfies the following equation.
+
+\begin{equation}
+\left[\frac{1}{4}\Delta_s^2 - (ik)^2\,\partial_x^2
+- (\partial_{y1}^2 + \partial_{z1}^2)(\partial_{y2}^2 + \partial_{z2}^2)\right]\phi = 0
+\tag{2-5}
+\end{equation}
+
+This equation is derived assuming a steady state, but it is not difficult to extend it to the unsteady
+state. Therefore, the variables are replaced as follows.
+
+\begin{equation}
+-ik \to \frac{1}{c}\,\partial_t
+\tag{2-6}
+\end{equation}
+
+Finally, the following equation is derived.
+
+%%% ページ5 %%%
+
+\begin{equation}
+\left[\frac{1}{4}\Delta_s^2
+- \frac{1}{c^2}\,\partial_t^2\,\partial_x^2
+- (\partial_{y1}^2 + \partial_{z1}^2)(\partial_{y2}^2 + \partial_{z2}^2)\right]\phi = 0
+\tag{2-7}
+\end{equation}
+
+Assuming that the time factor of $\phi$ is proportional to $\exp(-i\omega t)$, the solution of equation (2-7)
+is derived. Firstly, multiple Fourier transforms are performed on $\phi$ for $t$, $x$, $y_1$, $y_2$.
+
+\begin{equation}
+\tilde{\phi}(k_x,\, k_{y_1},\, k_{y_2},\, z_1,\, z_2,\, \omega)
+= \int_{-\infty}^{\infty} e^{i\omega t}\,dt
+  \int_{-\infty}^{\infty} e^{ik_{y_1} y_1}\,dy_1
+  \int_{-\infty}^{\infty} e^{ik_{y_2} y_2}\,dy_2
+  \int_{-\infty}^{\infty} e^{ik_x x}\,\phi(x,\, y_1,\, y_2,\, z_1,\, z_2,\, t)\,dx
+\tag{2-8}
+\end{equation}
+
+The following equations are obtained by describing the partial derivatives with respect to $z_1$
+and $z_2$ as $D_{z1}$ and $D_{z2}$, respectively.
+
+\begin{equation}
+\{(D_{z1}^2 + D_{z2}^2 - k_x^2 - k_{y1}^2 - k_{y2}^2)^2
+- 4k^2 k_x^2
+- 4(D_{z1}^2 - k_{y1}^2)(D_{z2}^2 - k_{y2}^2)\}\,\tilde{\phi} = 0
+\tag{2-9}
+\end{equation}
+
+When this equation is solved, there are two variables, $z_1$ and $z_2$. Therefore, the boundary value
+problem does not hold unless the boundary condition is given in the region with one-dimensional degrees of freedom in the $(z_1,\, z_2)$ space with respect to the fixed coordinates
+$(x,\, y_1,\, y_2)$, that is the coordinates $(k_x,\, k_{y1},\, k_{y2})$ in the wave number space. The boundary
+condition acquired by the actual measurement is given only at one point $(f(y_1),\, f(y_2))$ in $(z_1,\, z_2)$ space. To resolve this important issue, the following fact should be taken into account. The
+theory in this study, where $z_1$ is independent on $z_2$, should include a specific case where $z_1 = z$,
+$z_2 = z$. The solution of equation (2-9) can be expressed as follows.
+
+\begin{equation}
+E(k_x,\, k_{y_1},\, k_{y_2},\, z_1,\, z_2)
+= \exp(is_1 z_1)\exp(is_2 z_2)
+\tag{2-10}
+\end{equation}
+
+This formula becomes as follows when $z_1 = z_2 = z$.
+
+\begin{equation}
+E(k_x,\, k_{y_1},\, k_{y_2},\, z_1,\, z_2)
+= \exp\{i(s_1 + s_2)z\}
+\tag{2-11}
+\end{equation}
+
+Substituting equation (2-10) into equation (2-9) gives the following equation.
+
+%%% ページ6 %%%
+
+\begin{equation}
+(s_1^2 + s_2^2 + k_x^2 + k_{y1}^2 + k_{y2}^2)^2
+- 4k^2 k_x^2
+- 4(s_1^2 + k_{y1}^2)(s_2^2 + k_{y2}^2) = 0
+\tag{2-12}
+\end{equation}
+
+Another equation is needed to derive each of $s_1$ and $s_2$. Here, from the above-mentioned
+requirement for the consistency about the fact where this theory should include the specific case
+$z_1 = z_2 = z$, $s_1$ and $s_2$ should satisfy the following relational expression.
+
+\begin{equation}
+s_1 + s_2
+= \sqrt{\left(\sqrt{k^2 - k_{y1}^2} + \sqrt{k^2 - k_{y2}^2}\right)^2 - k_x^2}
+\tag{2-13}
+\end{equation}
+
+From equations (2-12) and (2-13), $s_1\,(k_x,\, k_{y1},\, k_{y2})$ and $s_2\,(k_x,\, k_{y1},\, k_{y2})$ are derived as follows.
+
+\begin{align}
+s_1(k_x,\, k_{y1},\, k_{y2})
+&= \frac{\sqrt{k^2 - k_{y1}^2}\;\sqrt{\left(\sqrt{k^2 - k_{y1}^2} + \sqrt{k^2 - k_{y2}^2}\right)^2 - k_x^2}}
+{\sqrt{k^2 - k_{y1}^2} + \sqrt{k^2 - k_{y2}^2}}
+\notag\\[6pt]
+s_2(k_x,\, k_{y1},\, k_{y2})
+&= \frac{\sqrt{k^2 - k_{y2}^2}\;\sqrt{\left(\sqrt{k^2 - k_{y1}^2} + \sqrt{k^2 - k_{y2}^2}\right)^2 - k_x^2}}
+{\sqrt{k^2 - k_{y1}^2} + \sqrt{k^2 - k_{y2}^2}}
+\tag{2-14}
+\end{align}
+
+Specific calculations are performed later, and the solution of equation (2-7) can be described as
+follows using these $s_1\,(k_x,\, k_{y1},\, k_{y2})$ and $s_2\,(k_x,\, k_{y1},\, k_{y2})$.
+
+\begin{align}
+&\phi(x,\, y_1,\, y_2,\, z_1,\, z_2,\, k) \notag\\
+&= \frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_{y_2} y_2)}\,
+a(k_x,\, k_{y_1},\, k_{y_2})\,
+e^{is_1(k_x,\,k_{y_1},\,k_{y_2})\,z_1}\,
+e^{is_2(k_x,\,k_{y_1},\,k_{y_2})\,z_2}\,
+dk_x\,dk_{y_1}\,dk_{y_2}
+\tag{2-15}
+\end{align}
+
+The equation of the cross-section curve $\mathrm{S}$ with the $x$-coordinate fixed is assumed as follows.
+Although not an essential assumption, for example, a paraboloid is assumed.
+
+\begin{equation}
+f(y) = \alpha y^2
+\tag{2-16}
+\end{equation}
+
+The boundary conditions given on the cross-section curve $\mathrm{S}$ are as follows.
+
+%%% ページ7 %%%
+
+\begin{align}
+&\phi(x,\, y_1,\, y_2,\, \alpha y_1^2,\, \alpha y_2^2,\, k) \notag\\
+&= \frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_{y_2} y_2)}\,
+a(k_x,\, k_{y_1},\, k_{y_2})\,
+e^{i\alpha\{s_1(k_x,\,k_{y_1},\,k_{y_2})\,y_1^2 + s_2(k_x,\,k_{y_1},\,k_{y_2})\,y_2^2\}}\,
+dk_x\,dk_{y_1}\,dk_{y_2}
+\tag{2-17}
+\end{align}
+
+This equation is used to determine $a(k_x,\, k_{y1},\, k_{y2})$. The following abbreviated notation is adopted.
+
+\begin{align}
+a(\mathbf{k}) &= a(k_x,\, k_{y_1},\, k_{y_2}) \notag\\
+s_1(\mathbf{k}) &= s_1(k_x,\, k_{y_1},\, k_{y_2}) \notag\\
+s_2(\mathbf{k}) &= s_2(k_x,\, k_{y_1},\, k_{y_2})
+\tag{2-18}
+\end{align}
+
+Equation (2-17) is the following integral equation for $a\,(k_x,\, k_{y1},\, k_{y2})$.
+
+\begin{align}
+&\phi(x,\, y_1,\, y_2,\, \alpha y_1^2,\, \alpha y_2^2,\, k) \notag\\
+&= \frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_{y_2} y_2)}\,
+a(\mathbf{k})\,
+e^{i\alpha\{s_1(\mathbf{k})\,y_1^2 + s_2(\mathbf{k})\,y_2^2\}}\,
+d\mathbf{k}
+\tag{2-19}
+\end{align}
+
+%%% ページ8前半 %%%
+
+When $a(\mathbf{k})$ can be obtained from this equation, visualization process become accomplished
+from equation (2-15).
+
+\begin{align}
+&\phi(x,\, y_1,\, y_2,\, z_1,\, z_2,\, k) \notag\\
+&= \frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_{y_2} y_2)}\,
+a(\mathbf{k})\,
+e^{is_1(\mathbf{k})\,z_1}\,
+e^{is_2(\mathbf{k})\,z_2}\,
+d\mathbf{k}
+\tag{2-20}
+\end{align}
+
+In the above equation, $z_1 = z_2 = z$ is set, and then Fourier transform with respect to $k$ is
+proceeded to obtain the following visualization function $\rho(\mathbf{r})$.
+
+\begin{equation}
+\rho(\mathbf{r}) = \lim_{t \to 0}\left[\frac{1}{2\pi}
+\int_{-\infty}^{\infty} \phi(x,\, y,\, y,\, z,\, z,\, k)\,e^{-ickt}\,dk\right]
+\tag{2-21}
+\end{equation}
+
+%%% ページ8後半 %%%
+
+\subsection{Solution of integral equation}
+
+$\Phi\,(k_x,\, y_I,\, y_J,\, k)$, which is Fourier transform of the data $\phi(x,\, y_I,\, y_J,\, z_I,\, z_J,\, t)$ measured at points $\mathrm{P}_I$
+and $\mathrm{P}_J$ on the curved surface, is written as follows.
+
+\begin{equation}
+\Phi_{I,J}(k_x,\, y_I,\, y_J,\, k)
+= \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-ikt - ik_x x}\,\phi(x,\, y_I,\, y_J,\, z_I,\, z_J,\, t)\,dt\,dx
+\tag{3-1}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+% ここにFigure 4の画像を挿入
+% \includegraphics[width=0.7\textwidth]{fig4.png}
+\vspace{8cm}
+\caption{The wave transmitted from $\mathrm{P}_1$ is reflected at point $\mathrm{P}$ and returns to $\mathrm{P}_2$. The boundary surface on the $Y$ axis from the data on the curved surface is derived.}
+\end{figure}
+
+Here, since $z_I$ and $z_J$ are on the cross-sectional curve, the following equation holds.
+
+\begin{align}
+z_I &= f(y_I) \notag\\
+z_J &= f(y_J)
+\tag{3-2}
+\end{align}
+
+The following equation is obtained from equation (2-15).
+
+\begin{align}
+&\Phi(k_x,\, y_I,\, y_J,\, k) \notag\\
+&= \frac{1}{(2\pi)^2}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_{y_1} y_I + k_{y_2} y_J)}\,
+a_{I,J}(k_x,\, k_{y_1},\, k_{y_2},\, k)\,
+e^{is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+dk_{y_1}\,dk_{y_2}
+\tag{3-3}
+\end{align}
+
+%%% ページ9 %%%
+
+This formula can be interpreted and written as follows.
+
+\begin{align}
+&\Phi(k_x,\, y_I,\, y_J,\, k)\,\delta(y_1 - y_I)\,\delta(y_2 - y_J) \notag\\
+&= \frac{1}{(2\pi)^2}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_{y_1} y_1 + k_{y_2} y_2)}\,
+a_{I,J}(k_x,\, k_{y_1},\, k_{y_2},\, k)\,
+e^{is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+dk_{y_1}\,dk_{y_2}
+\tag{3-4}
+\end{align}
+
+The following equation is obtained by taking the Fourier transform of both sides.
+
+\begin{align}
+&\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{i(k'_{y_1} y_1 + k'_{y_2} y_2)}\,
+\Phi(k_x,\, y_I,\, y_J,\, k)\,\delta(y_1 - y_I)\,\delta(y_2 - y_J)\;dy_1\,dy_2
+\notag\\
+&= \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{i(k'_{y_1} y_1 + k'_{y_2} y_2)}
+\left\{
+\frac{1}{(2\pi)^2}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_{y_1} y_1 + k_{y_2} y_2)}\,
+a_{I,J}(k_x,\, k_{y_1},\, k_{y_2},\, k)\,
+e^{is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+dk_{y_1}\,dk_{y_2}
+\right\}dy_1\,dy_2
+\tag{3-5}
+\end{align}
+
+%%% ページ10 %%%
+
+When integrated,
+
+\begin{align}
+&e^{i(k'_{y_1} y_I + k'_{y_2} y_J)}\,\Phi(k_x,\, y_I,\, y_J,\, k) \notag\\
+&= \left\{
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+\delta(k_{y_1} - k'_{y_1})\,\delta(k_{y_2} - k'_{y_2})\,
+a(k_x,\, k_{y_1},\, k_{y_2},\, k)\,
+e^{is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+dk_{y_1}\,dk_{y_2}
+\right\} \notag\\
+&= a_{I,J}(k_x,\, k'_{y_1},\, k'_{y_2},\, k)\,
+e^{is_1(k,\,k_x,\,k'_{y_1},\,k'_{y_2})\,z_I}\,
+e^{is_2(k,\,k_x,\,k'_{y_1},\,k'_{y_2})\,z_J}
+\tag{3-6}
+\end{align}
+
+In this way, $a_{I,J}$ are obtained as follows.
+
+\begin{equation}
+a_{I,J}(k_x,\, k_{y_1},\, k_{y_2},\, k)
+= e^{i(k_{y_1} y_I + k_{y_2} y_J)}\,
+e^{-is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{-is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+\Phi(k_x,\, y_I,\, y_J,\, k)
+\tag{3-7}
+\end{equation}
+
+The following equation is obtained by calculating the sum for all $I$ and $J$.
+
+%%% ページ10 続き %%%
+
+\begin{align}
+a(k_x,\, k_{y_1},\, k_{y_2},\, k)
+&= \sum_{I,J} a_{I,J}(k_x,\, k_{y_1},\, k_{y_2},\, k) \notag\\
+&= \sum_{I,J}
+e^{i(k_{y_1} y_I + k_{y_2} y_J)}\,
+e^{-is_1(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_I}\,
+e^{-is_2(k,\,k_x,\,k_{y_1},\,k_{y_2})\,z_J}\,
+\Phi(k_x,\, y_I,\, y_J,\, k)
+\tag{3-8}
+\end{align}
+
+In this way, it becomes possible to convert to the boundary condition at the plane $z = 0$.
+Deriving the solution of the partial differential equation (2-7) with the boundary condition at
+$z = 0$ gives the following from Eq.\ (2-15).
+
+\begin{align}
+&\phi(x,\, y_1,\, y_2,\, z_1,\, z_2,\, k) \notag\\
+&= \frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_{y_2} y_2)}\,
+a(k_x,\, k_{y_1},\, k_{y_2},\, k)\,
+e^{is_1(k_x,\,k_{y_1},\,k_{y_2})\,z_1}\,
+e^{is_2(k_x,\,k_{y_1},\,k_{y_2})\,z_2}\,
+dk_x\,dk_{y_1}\,dk_{y_2}
+\tag{3-9}
+\end{align}
+
+At this time, the reconstructed image can be obtained by integrating the following equation
+with respect to $k$.
+
+\begin{align}
+&\phi(x,\, y,\, y,\, z,\, k)
+= \lim_{y_1 \to y}\left[\phi(x,\, y_1,\, y,\, z,\, k)\right] \notag\\
+&= \lim_{y_1 \to y}\left[
+\frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_y y)}\,
+a(k_x,\, k_{y_1},\, k_y,\, k)\,
+e^{i\sqrt{\left(\sqrt{k^2 - k_{y_1}^2} + \sqrt{k^2 - k_y^2}\right)^2 - k_x^2}\;z}\,
+dk_x\,dk_{y_1}\,dk_y
+\right]
+\tag{3-10}
+\end{align}
+
+A variable $k_z$ is introduced as follows. The formula for expressing $k$ by $k_z$ and the function
+obtained by differentiating it are also shown.
+
+\begin{align}
+k_z &= \sqrt{\left(\sqrt{k^2 - k_{y_1}^2} + \sqrt{k^2 - k_{y_2}^2}\right)^2 - k_x^2}
+\notag\\[6pt]
+k &= \frac{1}{2}\sqrt{k_x^2 + k_z^2 + \frac{(k_{y_1}^2 - k_{y_2}^2)^2}{k_x^2 + k_z^2} + 2(k_{y_1}^2 + k_{y_2}^2)}
+\notag\\[6pt]
+\frac{dk}{dk_z} &= \frac{k_z\,\sqrt{k^2 - k_{y_1}^2}\,\sqrt{k^2 - k_{y_2}^2}}{k\,(k_x^2 + k_z^2)}
+\tag{3-11}
+\end{align}
+
+Finally, the image function $\rho(x,\, y,\, z)$ of the reconstruction result is described as follows.
+
+%%% ページ11 %%%
+
+\begin{align}
+\rho(x,\, y,\, z)
+&= \int_{-\infty}^{\infty} \phi(x,\, y,\, y,\, z,\, k)\,dk
+\notag\\[6pt]
+&= \int_{-\infty}^{\infty}
+\lim_{y_1 \to y}\left[\phi(x,\, y_1,\, y,\, z,\, k)\right]dk
+\notag\\[6pt]
+&= \int_{-\infty}^{\infty}
+\lim_{y_1 \to y}\left[
+\frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_y y)}\,
+a(k_x,\, k_{y_1},\, k_y,\, k)\,
+e^{i\sqrt{\left(\sqrt{k^2 - k_{y_1}^2} + \sqrt{k^2 - k_y^2}\right)^2 - k_x^2}\;z}\,
+dk_x\,dk_{y_1}\,dk_y
+\right]dk
+\notag\\[6pt]
+&= \int_{-\infty}^{\infty}
+\lim_{y_1 \to y}\left[
+\frac{1}{(2\pi)^3}
+\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}
+e^{-i(k_x x + k_{y_1} y_1 + k_y y)}\,
+e^{ik_z z}\,
+a(k_x,\, k_{y_1},\, k_y,\, k)
+\left(\frac{dk}{dk_z}\right)
+dk_x\,dk_{y_1}\,dk_y\,dk_z
+\right]
+\tag{3-12}
+\end{align}
+
+The theory for the inverse problem of wave scattering in this paper has a wide range of practical
+implications such as medical imaging and various non-destructive subsurface imaging.
+Although not mentioned in this paper about\quad the details of experimental setups, the theory that
+clearly incorporates the physical characteristics of the medium and the structure of the antenna
+actually used is equipped into the device developed by our research group. As the future work,
+important improvements should be made according to various application targets based on this
+theory.
+
+\vspace{2em}
+
+%%% ページ12（謝辞）%%%
+
+This work was supported by the Research Institute for Mathematical Sciences, an International
+Joint Usage/Research Center located in Kyoto University, and Medical Research and
+Development Programs Focused on Technology Transfers: Development of Advanced
+Measurement and Analysis Systems (AMED-SENTAN) in Japan Agency for Medical Research
+and Development, and Research on Development of New Medical Devices in Japan Agency
+for Medical Research and Development, Research on Development of New Medical Devices
+in Japan Agency for Medical Research and Development, and Grant-in-Aid for Transformative
+Research Areas in Ministry of Education, Culture, Sports, Science and Technology -- Japan.
+
+\end{document}
